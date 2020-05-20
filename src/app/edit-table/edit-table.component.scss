@@ -1,0 +1,46 @@
+table {
+
+    margin: 20px;
+
+    width: calc(100% - 40px);
+    table-layout: fixed;
+
+    tr.editRow {
+        outline: 1px solid #33a3ee;
+
+        td.editTd {
+            div{
+                display: flex;
+                input {
+                    flex: 1;
+                    padding: 2px 5px;
+                    &:active, &:hover {
+                        outline: none;
+                    }
+                }
+    
+                button {
+                    padding: 3px 8px;
+                }
+    
+            }
+        }
+
+
+    }
+
+    td.new-row {
+        text-align: right;
+    }
+
+    .valueDiv {
+        margin: 2px 5px;
+        cursor: pointer;
+        color: #000000;
+
+        &:hover {
+            text-shadow: 0px 1px 0px #154682;
+        }
+    }
+
+}

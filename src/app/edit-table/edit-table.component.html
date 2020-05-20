@@ -1,0 +1,35 @@
+<table>
+    <thead>
+        <tr>
+            <th *ngFor="let header of headers">{{header}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of jsonData"
+            [class.editRow]="row == elementToEdit">
+            <td [class.editTd]="columnToEdit == header"
+                *ngFor="let header of headers">
+                <div class="valueDiv"
+                     (click)="startEdit(row, header)"
+                     *ngIf="row != elementToEdit || columnToEdit != header">
+                    {{row[header]}}
+                </div>
+                <div *ngIf="row == elementToEdit && columnToEdit == header">
+                    <input type="text"
+                           (keyup)="onKeyUp($event)"
+                           [(ngModel)]="editValue" />
+                    <button (click)="set()">set</button>
+                </div>
+
+            </td>
+        </tr>
+
+    </tbody>
+    <tfoot>
+        <tr>
+            <td class="new-row"
+                (click)="newEntry()"
+                [attr.colspan]="headers.length"><button>new entry</button> </td>
+        </tr>
+    </tfoot>
+</table>
