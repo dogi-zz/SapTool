@@ -5,24 +5,35 @@ table {
     width: calc(100% - 40px);
     table-layout: fixed;
 
+    th {
+        vertical-align: top;
+
+        input {
+            width: calc( 100% - 15px );
+            padding: 0 2px;
+        }
+    }
+
     tr.editRow {
         outline: 1px solid #33a3ee;
 
         td.editTd {
-            div{
+            div {
                 display: flex;
+
                 input {
                     flex: 1;
-                    padding: 2px 5px;
-                    &:active, &:hover {
+
+                    &:active,
+                    &:hover {
                         outline: none;
                     }
                 }
-    
+
                 button {
                     padding: 3px 8px;
                 }
-    
+
             }
         }
 

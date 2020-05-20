@@ -17,7 +17,6 @@ export class AppComponent {
   constructor(
     private saveLoadService: SaveLoadService,
   ) {
-   
   }
 
   back() {

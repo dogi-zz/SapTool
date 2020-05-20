@@ -1,11 +1,20 @@
+{{headerFilters|json}}
+
 <table>
     <thead>
         <tr>
-            <th *ngFor="let header of headers">{{header}}</th>
+            <th *ngFor="let header of headers">
+                <div>{{header}} </div>
+                <div>
+                    <input type="text"
+                           (keyup)="updateFilter()"
+                           [(ngModel)]="headerFilters[header]" />
+                </div>
+            </th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let row of jsonData"
+        <tr *ngFor="let row of filteredData"
             [class.editRow]="row == elementToEdit">
             <td [class.editTd]="columnToEdit == header"
                 *ngFor="let header of headers">

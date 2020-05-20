@@ -1,17 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-edit-table',
   templateUrl: './edit-table.component.html',
   styleUrls: ['./edit-table.component.scss']
 })
-export class EditTableComponent implements OnInit {
+export class EditTableComponent implements OnInit, OnChanges {
 
   @Input()
   public jsonData: any[] = [];
 
-  public headers = ['feld1', 'feld2', 'feld3'];
+  public filteredData: any[] = [];
 
+  public headers = [];
+  public headerFilters: { [header: string]: string } = {};
 
   public elementToEdit = null;
   public columnToEdit = null;
@@ -23,6 +25,39 @@ export class EditTableComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.update();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.update();
+  }
+
+  update() {
+    // initialisieren der Container
+    this.headers = [];
+    this.headerFilters = {};
+    // Die Headers anhand der Inhalte der Objekte ermitteln
+    this.jsonData.forEach(row => {
+      Object.keys(row).forEach(colName => {
+        if (!this.headers.includes(colName)) {
+          this.headers.push(colName);
+          this.headerFilters[colName] = '';
+        }
+      });
+    });
+    // die gefilterten Daten erstmal auf "alles" setzen
+    this.filteredData = this.jsonData.filter(item => true);
+  }
+
+  updateFilter() {
+    // Suche die Keys 
+    let keys = Object.keys(this.headerFilters).filter(key => this.headerFilters[key]);
+    this.filteredData = this.jsonData.filter(item => {
+      let isVisible = true;
+      keys.forEach(key => {
+        if (!item[key].toLowerCase().includes(this.headerFilters[key].toLowerCase())) { isVisible = false; }
+      });
+      return isVisible;
+    });
   }
 
   newEntry() {
@@ -34,7 +69,7 @@ export class EditTableComponent implements OnInit {
   }
 
   startEdit(row: any, header: string) {
-    if (this.elementToEdit){
+    if (this.elementToEdit) {
       this.set();
     }
     this.elementToEdit = row;
@@ -53,6 +88,10 @@ export class EditTableComponent implements OnInit {
     if (event.keyCode === 13) {
       this.set();
     }
+  }
+
+  activateFilter(header) {
+    this.headerFilters[header] = '';
   }
 
 }
