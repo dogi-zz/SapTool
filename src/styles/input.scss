@@ -1,0 +1,77 @@
+input.filter {
+  border: 1px solid #a6a6a6;
+  padding: 2px 4px;
+  border-radius: 3px;
+  width: calc(100% - 8px);
+  margin: 0;
+  margin-bottom: 5px;
+
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+}
+
+input.value-input {
+  border: 1px solid rgba(166, 166, 166, 0.5);
+  padding: 2px;
+  width: calc(100% - 6px);
+  margin: 0;
+  background: none;
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+}
+
+select.value-input {
+  border: 1px solid rgba(166, 166, 166, 0.5);
+  padding: 2px;
+  width: calc(100% - 4px);
+  margin: 0;
+  background: none;
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+}
+
+select.filter {
+  border: 1px solid #a6a6a6;
+  padding: 2px 4px;
+  border-radius: 3px;
+  width: calc(100% - 8px);
+  margin: 0;
+  margin-bottom: 5px;
+  background-color: white;
+
+  &:hover,
+  &:focus {
+    outline: none;
+  }
+
+  option {
+    color: #333;
+    padding: 4px;
+  }
+}
+
+select.table-choose {
+  border: 1px solid #a6a6a6;
+  padding: 4px 12px;
+  border-radius: 3px;
+  background-color: white;
+
+  option {
+    color: #333;
+  }
+  option.none {
+    font-style: italic;
+    color: #999;
+  }
+
+  &.none {
+    font-style: italic;
+    color: #999;
+  }
+}

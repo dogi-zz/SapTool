@@ -1,17 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import './styles/panel.scss';
+@import './styles/table.scss';
+@import './styles/input.scss';
+
+$fa-font-path: "/assets/fonts";
+@import "../node_modules/font-awesome/scss/font-awesome.scss";
+
 body {
-    font-family: Arial;
+    font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    text-decoration: none;
 
-}
-
-.panel {
-    margin: 20px;
     background: #eee;
-    border: 1px solid #999;
-    border-radius: 5px;
-    padding: 10px;
 }
+
+
 
 
 input {
@@ -43,37 +47,37 @@ button {
 }
 
 
-table {
-    border: 1px solid #999;
-    border-collapse: collapse;
+// table {
+//     border: 1px solid #999;
+//     border-collapse: collapse;
 
-    thead,
-    tfoot {
-        background: #eee;
+//     thead,
+//     tfoot {
+//         background: #eee;
     
-    }
+//     }
 
-    th{
-        padding: 5px;
-    }
+//     th{
+//         padding: 5px;
+//     }
 
-    td,
-    th {
-        font-size: 15px;
-        text-align: left;
-        border: 1px solid #999;
-    }
+//     td,
+//     th {
+//         font-size: 15px;
+//         text-align: left;
+//         border: 1px solid #999;
+//     }
 
-    tbody {
-        tr:nth-child(even) {
-            background: #cacfd6;
-        }
+//     tbody {
+//         tr:nth-child(even) {
+//             background: #cacfd6;
+//         }
 
-        tr:nth-child(odd) {
-            background: #e0e7f1;
-        }
+//         tr:nth-child(odd) {
+//             background: #e0e7f1;
+//         }
 
-    }
+//     }
 
 
-}
+// }

@@ -1,17 +1,14 @@
-<div *ngIf="!jsonData">
+<div class="panel">
+    <select class="table-choose none"
+            [(ngModel)]="tableToLoad">
+        <option selected
+                [ngValue]="null"
+                class="none">select table...</option>
+        <option *ngFor="let table of tables"
+                [ngValue]="table">{{table}}</option>
 
-    <div class="panel">
-        <input [(ngModel)]="tableToLoad" >
-        <button (click)="loadData()">load</button>
-    </div>
-
+    </select>
 </div>
 
-<div *ngIf="jsonData">
-    <app-edit-table [jsonData]="jsonData"></app-edit-table>
-
-    <div class="optionDiv">
-        <span class="link" (click)="back()">back</span>
-        <button (click)="saveData()">save</button>
-    </div>
-</div>
+<app-edit-table *ngIf="tableToLoad"
+                [tableName]="tableToLoad"></app-edit-table>

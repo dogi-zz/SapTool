@@ -1,0 +1,189 @@
+swagger: "2.0"
+info:
+  description: "Eine Arbietsgrundlage für das Abgular-SAP-Tabellen-Tool"
+  version: "1.0.0"
+  title: "SAP Tool"
+  contact:
+    email: "dogan@cinbir.de"
+host: "cinbir.de"
+basePath: "/saptool/api"
+schemes:
+- "http"
+paths:
+
+  /tables:
+    get:
+      summary: "Listet die verfügbaren Tabellen auf"
+      operationId: "listTables"
+      consumes:
+      - "none"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: "array"
+            items:
+               type: "string"
+            example:
+              - "tabelle1"         
+              - "tabelle2"         
+
+  /table/{name}/info:
+    get:
+      summary: "Liefert die Metainformationen von Tabellen"
+      operationId: "tableInfos"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Die Tabelle um die dass es geht"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                type:
+                  type: "string"
+                  enum: ["string", "number", "boolean"]
+            example:
+              - name: "spalte1"       
+                type: "string"
+              - name: "spalte2"       
+                type: "number"
+              - name: "spalte3"       
+                type: "boolean"
+
+  /table/{name}/data:
+    get:
+      summary: "Liefert die Daten der Tabelle, optional kann eine Seitengröße und die Gewünschte Seite angebenen werden. Optional kann man auch Filterparameter angeben. In der Rückgabe steht dann die Anzahl der gefundenen Elemente."
+      operationId: "tableData"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Die Tabelle um die dass es geht"
+        required: true
+        type: "string"
+      - name: "pagesize"
+        in: "query"
+        description: "Die Anzahl der Einträge pro Seite"
+        type: "number"
+      - name: "page"
+        in: "query"
+        description: "Die gewünschte Seite beginnend bei 1"
+        type: "number"
+      - name: "filter_{name}"
+        in: "query"
+        description: "Einen oder mehrere Filter"
+        type: "string"
+      responses:
+        "200":
+          description: ""
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "number"
+              data:
+                type: "array"
+                items:
+                  type: "object"
+            example:
+              - count: 23    
+              - data: 
+                - spalte1: "Inhalt der Zeile 1"
+                  spalte2: 123.5
+                  spalte3: false
+                - spalte1: "Inhalt der Zeile 2"
+                  spalte2: 234.5
+                  spalte3: true
+
+  /table/{name}/new:
+    post:
+      summary: "Anlegen eines neuen Eintrags"
+      operationId: "newItem"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Die Tabelle um die dass es geht"
+        required: true
+        type: "string"
+      - name: "value"
+        in: "body"
+        description: "Der Eintrag der engefügt werden soll"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            action:
+              type: "string"
+              enum: ["new"]
+            data:
+              type: "object"
+          example:
+            - action: "new"    
+            - data: 
+                spalte1: "Inhalt der Zeile 1"
+                spalte2: 123.5
+                spalte3: false
+      responses:
+        "200":
+          description: ""
+            
+
+  /table/{name}/update:
+    post:
+      summary: "Anlegen eines neuen Eintrags"
+      operationId: "updateItem"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Die Tabelle um die dass es geht"
+        required: true
+        type: "string"
+      - name: "value"
+        in: "body"
+        description: "Der Eintrag der engefügt werden soll"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            action:
+              type: "string"
+              enum: ["update"]
+            original:
+              type: "object"
+            data:
+              type: "object"
+          example:
+            - action: "new"    
+            - original: 
+                spalte1: "Inhalt der Zeile 1"
+                spalte2: 123.5
+                spalte3: false
+            - data: 
+                spalte1: "Neuer Inhalt der Zeile"
+                spalte2: 123.6
+                spalte3: false
+      responses:
+        "200":
+          description: ""
+            
+            
+            
+            

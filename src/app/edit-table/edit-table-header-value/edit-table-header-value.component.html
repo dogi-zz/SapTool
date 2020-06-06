@@ -1,0 +1,17 @@
+<div *ngIf="col.type == 'string' || col.type == 'number'">
+    <input class="filter"
+           type="text"
+           [(ngModel)]="filterValue"
+           (ngModelChange)="filterChanged()" />
+</div>
+<div *ngIf="col.type == 'boolean'">
+    <select class="filter"
+            [(ngModel)]="filterValue"
+            (ngModelChange)="filterChanged()">
+        <option selected
+                [ngValue]=""
+                class="none">...</option>
+        <option [ngValue]="true">true</option>
+        <option [ngValue]="false">false</option>
+    </select>
+</div>

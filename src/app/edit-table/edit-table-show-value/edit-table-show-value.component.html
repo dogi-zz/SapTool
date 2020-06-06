@@ -1,0 +1,10 @@
+
+<div *ngIf="col.type == 'string' || col.type == 'number'">
+    {{value}}
+</div>
+
+<div *ngIf="col.type == 'boolean'">
+    <i class="fa"
+       [class.fa-check]="value"
+       [class.fa-times]="!value"></i>
+</div>

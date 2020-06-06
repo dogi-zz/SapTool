@@ -1,44 +1,68 @@
-{{headerFilters|json}}
-
-<table>
-    <thead>
+<div class="edit-table">
+    <div class="edit-table-caption"><button *ngIf="canSave"
+                (click)="saveAll()"><i class="fa fa-save"></i></button> {{tableName}}</div>
+    <table *ngIf="tableInfo">
         <tr>
-            <th *ngFor="let header of headers">
-                <div>{{header}} </div>
-                <div>
-                    <input type="text"
-                           (keyup)="updateFilter()"
-                           [(ngModel)]="headerFilters[header]" />
-                </div>
+            <th class="edit-table-header"
+                style="width: 25px;">
+            </th>
+            <th *ngFor="let col of tableInfo"
+                [title]="col.name"
+                class="edit-table-header">
+                {{col.name}}
             </th>
         </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let row of filteredData"
-            [class.editRow]="row == elementToEdit">
-            <td [class.editTd]="columnToEdit == header"
-                *ngFor="let header of headers">
-                <div class="valueDiv"
-                     (click)="startEdit(row, header)"
-                     *ngIf="row != elementToEdit || columnToEdit != header">
-                    {{row[header]}}
-                </div>
-                <div *ngIf="row == elementToEdit && columnToEdit == header">
-                    <input type="text"
-                           (keyup)="onKeyUp($event)"
-                           [(ngModel)]="editValue" />
-                    <button (click)="set()">set</button>
-                </div>
+        <tr>
+            <th class="edit-table-header"
+                style="width: 25px;"><button (click)="addItem()">+</button></th>
+            <th *ngFor="let col of tableInfo"
+                class="edit-table-header">
+                <app-edit-table-header-value [col]="col"
+                                             (filterChange)="filterChanged(col, $event)"></app-edit-table-header-value>
+            </th>
+        </tr>
 
+        <ng-container *ngIf="newData && newData.length">
+            <tr *ngFor="let row of newData">
+                <td class="edit-table-button"
+                    (click)="saveNewItem(row)"><i class="fa fa-file "></i></td>
+                <td *ngFor="let col of tableInfo"
+                    [class.edit]="true"
+                    [title]="row[col.name]">
+                    <app-edit-table-edit-value [col]="col"
+                                               originalValue="(new item)"
+                                               [(value)]="row[col.name]"
+                                               (valueChange)="valueChange(row)">
+                    </app-edit-table-edit-value>
+                </td>
+            </tr>
+            <tr class="spacer">
+                <td [attr.colspan]="tableInfo.length +1">
+                    <hr />
+                </td>
+            </tr>
+        </ng-container>
+        <tr *ngFor="let extRow of filteredData">
+            <td class="edit-table-button"
+                (click)="updateItem(extRow)"><i class="fa fa-save"
+                   *ngIf="extRow[1]"></i></td>
+            <td *ngFor="let col of tableInfo"
+                [class.edit]="extRow[1]"
+                (click)="editItem(extRow)"
+                [title]="extRow[0][col.name]">
+                <app-edit-table-show-value *ngIf="!extRow[1]"
+                                           [col]="col"
+                                           [value]="extRow[0][col.name]"></app-edit-table-show-value>
+                <app-edit-table-edit-value *ngIf="extRow[1]"
+                                           [col]="col"
+                                           [originalValue]="'orig: '+extRow[0][col.name]"
+                                           [(value)]="extRow[1][col.name]"
+                                           (valueChange)="valueChange(extRow[0])"></app-edit-table-edit-value>
             </td>
         </tr>
 
-    </tbody>
-    <tfoot>
-        <tr>
-            <td class="new-row"
-                (click)="newEntry()"
-                [attr.colspan]="headers.length"><button>new entry</button> </td>
-        </tr>
-    </tfoot>
-</table>
+    </table>
+    <app-paginator [(page)]="page"
+                   [pageCount]="pageCount"
+                   (pageChange)="update()"></app-paginator>
+</div>

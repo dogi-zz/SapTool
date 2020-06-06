@@ -1,4 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ApiDataService, TableInfoColumn } from '../api-data.service';
+import { EditService } from '../edit.service';
+
+const PAGE_SIZE = 10;
+
+type ItemType = { [colname: string]: string | number | boolean };
 
 @Component({
   selector: 'app-edit-table',
@@ -8,90 +14,120 @@ import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges }
 export class EditTableComponent implements OnInit, OnChanges {
 
   @Input()
-  public jsonData: any[] = [];
+  public tableName: string;
 
-  public filteredData: any[] = [];
+  tableInfo: TableInfoColumn[];
+  pageCount = 1;
+  page = 1;
 
-  public headers = [];
-  public headerFilters: { [header: string]: string } = {};
+  // Das erste ist das OriginalItem, das zweite ist (falls im editiermodus) das editierte
+  public filteredData: [ItemType, ItemType][] = [];
+  public newData: ItemType[] = [];
+  public canSave = false;
 
-  public elementToEdit = null;
-  public columnToEdit = null;
-
-  editValue = 'test';
+  public filterValues: { [colname: string]: string } = {};
 
   constructor(
     private cd: ChangeDetectorRef,
+    private apiDataService: ApiDataService,
+    private editService: EditService,
   ) { }
 
   ngOnInit(): void {
-    this.update();
+    this.rebuildColumns();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    this.update();
+    this.rebuildColumns();
+  }
+
+  rebuildColumns() {
+    this.filterValues = {};
+    this.apiDataService.loadTableInfo(this.tableName).then(tableInfo => {
+      this.tableInfo = tableInfo;
+      this.tableInfo.forEach(col => {
+        this.filterValues[col.name] = '';
+      });
+      this.loadPage(1);
+    });
   }
 
   update() {
-    // initialisieren der Container
-    this.headers = [];
-    this.headerFilters = {};
-    // Die Headers anhand der Inhalte der Objekte ermitteln
-    this.jsonData.forEach(row => {
-      Object.keys(row).forEach(colName => {
-        if (!this.headers.includes(colName)) {
-          this.headers.push(colName);
-          this.headerFilters[colName] = '';
+    this.loadPage(this.page);
+  }
+
+  loadPage(page: number) {
+    this.newData = this.editService.getNewData(this.tableName);
+    this.apiDataService.loadTableData(this.tableName, page, PAGE_SIZE, this.filterValues).then(dataresponse => {
+      this.page = page;
+      this.pageCount = Math.ceil(dataresponse.count / 10);
+      this.filteredData = dataresponse.data.map(item => {
+        if (this.editService.isEdit(this.tableName, item)) {
+          return [item, this.editService.getEdit(this.tableName, item)];
+        } else {
+          return [item, null];
         }
       });
     });
-    // die gefilterten Daten erstmal auf "alles" setzen
-    this.filteredData = this.jsonData.filter(item => true);
+    this.canSave = this.editService.canSave(this.tableName);
   }
 
-  updateFilter() {
-    // Suche die Keys 
-    let keys = Object.keys(this.headerFilters).filter(key => this.headerFilters[key]);
-    this.filteredData = this.jsonData.filter(item => {
-      let isVisible = true;
-      keys.forEach(key => {
-        if (!item[key].toLowerCase().includes(this.headerFilters[key].toLowerCase())) { isVisible = false; }
-      });
-      return isVisible;
+  filterChanged(col: TableInfoColumn, value: string) {
+    this.filterValues[col.name] = value;
+    this.loadPage(1);
+  }
+
+
+  addItem() {
+    let newItem: ItemType = {};
+    this.tableInfo.forEach(property => {
+      if (property.type === 'string') {
+        newItem[property.name] = '';
+      }
+      if (property.type === 'number') {
+        newItem[property.name] = 0;
+      }
+      if (property.type === 'boolean') {
+        newItem[property.name] = false;
+      }
+    });
+    this.editService.addItem(this.tableName, newItem);
+    // Update der Anzeige
+    this.newData = this.editService.getNewData(this.tableName);
+    this.canSave = true;
+  }
+
+  editItem(extItem: [ItemType, ItemType]) {
+    if (this.editService.isEdit(this.tableName, extItem[0])) {
+      return;
+    }
+    this.editService.editItem(this.tableName, extItem[0]);
+    this.update();
+    this.canSave = true;
+  }
+
+  valueChange(row: ItemType) {
+    this.editService.changeItem(this.tableName, row)
+  }
+
+
+  saveNewItem(row: ItemType) {
+    this.editService.saveNewItem(this.tableName, row).then(()=>{
+      this.update();
+    });
+  }
+  
+  updateItem(extItem: [ItemType, ItemType]) {
+    this.editService.updateItem(this.tableName, extItem[0], extItem[1]).then(()=>{
+      this.update();
     });
   }
 
-  newEntry() {
-    let newItem = {};
-    this.headers.forEach(header => {
-      newItem[header] = 'value for ' + header;
+  
+  saveAll(){
+    this.editService.saveAll(this.tableName).then(()=>{
+      this.update();
     });
-    this.jsonData.push(newItem);
   }
 
-  startEdit(row: any, header: string) {
-    if (this.elementToEdit) {
-      this.set();
-    }
-    this.elementToEdit = row;
-    this.columnToEdit = header;
-    this.editValue = row[header];
-  }
-
-  set() {
-    this.elementToEdit[this.columnToEdit] = this.editValue;
-    this.elementToEdit = null;
-    this.columnToEdit = null;
-    this.editValue = null;
-  }
-
-  onKeyUp(event: any) {
-    if (event.keyCode === 13) {
-      this.set();
-    }
-  }
-
-  activateFilter(header) {
-    this.headerFilters[header] = '';
-  }
 
 }

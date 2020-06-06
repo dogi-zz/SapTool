@@ -1,0 +1,27 @@
+<div *ngIf="col.type == 'string'">
+    <input class="value-input"
+           type="text"
+           [title]="originalValue"
+           [(ngModel)]="value"
+           (ngModelChange)="changeValue()" />
+</div>
+
+<div *ngIf="col.type == 'number'">
+    <input class="value-input"
+           style="text-align: right;"
+           [title]="originalValue"
+           type="text"
+           [(ngModel)]="value"
+           (ngModelChange)="changeValue()" />
+</div>
+
+
+<div *ngIf="col.type == 'boolean'">
+    <select class="value-input"
+            [title]="originalValue"
+            [(ngModel)]="value"
+            (ngModelChange)="changeValue()">
+        <option [ngValue]="true">true</option>
+        <option [ngValue]="false">false</option>
+    </select>
+</div>

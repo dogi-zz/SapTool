@@ -1,57 +1,13 @@
 table {
-
-    margin: 20px;
-
-    width: calc(100% - 40px);
-    table-layout: fixed;
-
-    th {
-        vertical-align: top;
-
-        input {
-            width: calc( 100% - 15px );
-            padding: 0 2px;
-        }
+  th {
+    button {
+      padding: 2px 5px;
     }
-
-    tr.editRow {
-        outline: 1px solid #33a3ee;
-
-        td.editTd {
-            div {
-                display: flex;
-
-                input {
-                    flex: 1;
-
-                    &:active,
-                    &:hover {
-                        outline: none;
-                    }
-                }
-
-                button {
-                    padding: 3px 8px;
-                }
-
-            }
-        }
-
-
-    }
-
-    td.new-row {
-        text-align: right;
-    }
-
-    .valueDiv {
-        margin: 2px 5px;
-        cursor: pointer;
-        color: #000000;
-
-        &:hover {
-            text-shadow: 0px 1px 0px #154682;
-        }
-    }
-
+  }
+  td.edit {
+    padding: 7px 2px;
+  }
+  td.edit-table-button{
+    cursor: pointer;
+  }
 }

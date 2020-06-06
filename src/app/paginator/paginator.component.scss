@@ -1,0 +1,51 @@
+div.wrapper {
+  padding: 10px;
+
+  div.paginator {
+    display: flex;
+    justify-content: flex-end;
+
+    .info{
+      color: #999;
+      text-shadow: 0px 1px 0px #afafaf;
+      padding: 4px 10px;
+    }
+
+    button {
+      padding: 2px;
+      margin: 0;
+
+      background-color: #f4f4f4;
+      color: #666;
+      border: 1px solid #a6a6a6;
+      text-shadow: none;
+      box-shadow: none;
+
+      font-size: 12px;
+      width: 40px;
+
+      &:disabled {
+        color: #a6a6a6;
+        cursor: default;
+      }
+      &.selected{
+        color: #007dc1;
+        font-weight: bold;
+      }
+
+      border-radius: 0;
+      border-right: none;
+    }
+
+    button:first-child {
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+    }
+    button:last-child {
+        border-right: 1px solid #a6a6a6;
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+      }
+  
+  }
+}

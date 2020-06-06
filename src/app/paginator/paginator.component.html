@@ -1,0 +1,22 @@
+<div class="wrapper">
+        <div class="paginator">
+                <ng-container *ngIf="pageCount">
+                        <span class="info">{{page}} / {{pageCount}}</span>
+                        <button [disabled]="page==1"
+                                (click)="select(1)">&lt;&lt;</button>
+                        <button [disabled]="page==1"
+                                (click)="select(page-1)">&lt;</button>
+                        <button *ngFor="let p of pages"
+                                (click)="select(p)"
+                                [disabled]="page == p || p == null"
+                                [class.selected]="page == p">{{p != null? p : '...'}}</button>
+                        <button [disabled]="page==pageCount"
+                                (click)="select(page+1)">&gt;</button>
+                        <button [disabled]="page==pageCount"
+                                (click)="select(pageCount)">&gt;&gt;</button>
+                </ng-container>
+                <span class="info"
+                      *ngIf="!pageCount">no data</span>
+        </div>
+
+</div>

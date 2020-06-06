@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 import { SaveLoadService } from './save-load.service';
+import { ApiDataService } from './api-data.service';
+import { EditService } from './edit.service';
+
+
+//const LOAD_TABLE_URL = BASE_URL + 'orders/info';
 
 @Component({
   selector: 'app-root',
@@ -8,29 +13,23 @@ import { SaveLoadService } from './save-load.service';
 })
 export class AppComponent {
 
-  title = 'SapTool';
+  public title = 'SapTool';
 
-  public jsonData: any[] = null;
 
-  public tableToLoad: string;
+  // Liste von allen bekannten Tabellen
+  public tables: string[] = [];
+
+  // Tabellenname der mit der SelectBox verbunden ist
+  public tableToLoad: string = null;
 
   constructor(
     private saveLoadService: SaveLoadService,
+    private apiDataService: ApiDataService,
+    public editService: EditService,
   ) {
-  }
-
-  back() {
-    this.jsonData = null;
-  }
-
-  saveData() {
-    console.info("save");
-    console.info(this);
-  }
-
-  loadData() {
-    this.saveLoadService.load(this.tableToLoad).then(data => {
-      this.jsonData = <any[]>data;
+    apiDataService.loadTables().then(tables => {
+      this.tables = tables as string[];
     });
   }
+
 }
